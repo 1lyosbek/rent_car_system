@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/common/database/base.entity';
-import { Entity, Column } from 'typeorm';
+import { CarEntity } from 'src/modules/car/entities/car.entity';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity("files")
 export class FileEntity extends BaseEntity {
@@ -11,5 +12,9 @@ export class FileEntity extends BaseEntity {
 
   @Column({type: "int", nullable: false})
   size: number;
+
+  @ManyToOne(()=> CarEntity, (car)=> car.files)
+  @JoinColumn({name: "car_id"})
+  cars: CarEntity[];
 }
 
