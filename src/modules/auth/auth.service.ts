@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserRepository } from '../user/user.repository';
-import { hashed, compare } from 'src/lib/bcrypt';
+// import { hashed, compare } from 'src/lib/bcrypt';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { RedisKeys } from 'src/common/enums/enum';
@@ -22,17 +22,13 @@ export class AuthService implements IAuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<ResData<ILoginData>> {
+    throw new Error("login")
     const { data: foundUser } = await this.userService.findOneByLogin(
-      dto.login,
+      dto.phone,
     );
 
     if (!foundUser) {
       throw new LoginOrPasswordWrongException();
-    }
-
-    const compared = await compare(dto.password, foundUser.password);
-    if (!compared) {
-       throw new LoginOrPasswordWrongException();
     }
 
     const token = await this.jwtService.signAsync({ id: foundUser.id });
@@ -44,6 +40,7 @@ export class AuthService implements IAuthService {
   }
 
   async register(dto: RegisterDto): Promise<ResData<ILoginData>> {
+    throw new Error("df")
     const { data: foundUser } = await this.userService.findOneByLogin(
       dto.login,
     );
@@ -51,14 +48,10 @@ export class AuthService implements IAuthService {
     if (foundUser) {
       throw new LoginOrPasswordWrongException();
     } 
-    dto.password = await hashed(dto.password);
+    // dto.password = await hashed(dto.password);
     
     const newUser = new UserEntity();
-    newUser.login = dto.login;
-    newUser.password = dto.password;
-    newUser.fullName = dto.fullName;
-    newUser.role = dto.role;
-
+  
     const savedUser = await this.userRepository.createUser(newUser);
 
     await this.cacheManager.del(RedisKeys.USERS)

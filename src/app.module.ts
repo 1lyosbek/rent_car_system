@@ -13,6 +13,9 @@ import { config } from './common/config/config';
 import { CompanyModule } from './modules/company/company.module';
 import { CarModule } from './modules/car/car.module';
 import { ModelModule } from './modules/model/model.module';
+import { CarEntity } from './modules/car/entities/car.entity';
+import { ModelEntity } from './modules/model/entities/model.entity';
+import { CompanyEntity } from './modules/company/entities/company.entity';
 
 @Module({
   imports: [
@@ -33,7 +36,7 @@ import { ModelModule } from './modules/model/model.module';
       username: config.database_user,
       password: config.database_password,
       database: config.database,
-      entities: [UserEntity,TransactionEntity, FileEntity],
+      entities: [UserEntity, TransactionEntity, FileEntity, CarEntity, ModelEntity, CompanyEntity],
       synchronize: true,
     }),
     AuthModule,

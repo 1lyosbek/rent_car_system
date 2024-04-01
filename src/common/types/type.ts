@@ -10,3 +10,9 @@ export interface IConfig {
     database_host: string;
     database_port: number;
 }
+
+export interface ICarInfo {
+    color: string;
+    max_speed: number;
+    number_of_seats: number;
+}

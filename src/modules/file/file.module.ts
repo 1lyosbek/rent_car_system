@@ -4,11 +4,12 @@ import { FileController } from './file.controller';
 import { FileRepository } from './file.repository';
 import { FileEntity } from './entities/file.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CarEntity } from '../car/entities/car.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      FileEntity,
+      FileEntity, CarEntity
     ])],
   controllers: [FileController],
   providers: [

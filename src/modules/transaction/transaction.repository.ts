@@ -4,20 +4,18 @@ import { TransactionEntity } from "./entities/transaction.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ID } from "src/common/types/type";
 import { UserEntity } from "../user/entities/user.entity";
-import { ProductEntity } from "../product/entities/product.entity";
 
 export class TransactionRespository implements ITransactionRepository{
     constructor(
         @InjectRepository(TransactionEntity) private readonly repository: Repository<TransactionEntity>,
         private readonly dataSource: DataSource
         ) {}
-async create(transactionEntity: TransactionEntity, productEntity: ProductEntity): Promise<TransactionEntity> {
+async create(transactionEntity: TransactionEntity): Promise<TransactionEntity> {
   const queryRunner = this.dataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
   try {
     const created = await queryRunner.manager.save(transactionEntity);
-    await queryRunner.manager.save(productEntity);
     await queryRunner.commitTransaction();
     return created;
   } catch (e) {

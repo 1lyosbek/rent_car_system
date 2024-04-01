@@ -8,14 +8,7 @@ export class LoginDto {
   })
   @IsString()
   @IsNotEmpty()
-  login: string;
-
-  @ApiProperty({
-    type: String,
-  })
-  @IsString()
-  @IsNotEmpty()
-  password: string;
+  phone: string;
 }
 
 export class RegisterDto {

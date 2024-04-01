@@ -38,8 +38,8 @@ export class UserService implements IUserService {
     return new ResData('success', 200, foundUser);
   }
 
-  async findOneByLogin(login: string):Promise<ResData<UserEntity>> {
-    const foundData = await this.repository.findOneByLogin(login);
+  async findOneByLogin(phone: string):Promise<ResData<UserEntity>> {
+    const foundData = await this.repository.findOneByLogin(phone);
 
     const resData = new ResData('success', 200, foundData);
 

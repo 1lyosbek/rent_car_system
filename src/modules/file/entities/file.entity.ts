@@ -1,10 +1,12 @@
 import { BaseEntity } from 'src/common/database/base.entity';
 import { CarEntity } from 'src/modules/car/entities/car.entity';
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { CompanyEntity } from 'src/modules/company/entities/company.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity("files")
 export class FileEntity extends BaseEntity {
-  @Column({name : "location", type: "text", nullable: false})
+  @Column({name : "url", type: "text", nullable: false})
   url: string;
 
   @Column({name: "mime_type", type: "varchar", nullable: false})
@@ -13,8 +15,15 @@ export class FileEntity extends BaseEntity {
   @Column({type: "int", nullable: false})
   size: number;
 
-  @ManyToOne(()=> CarEntity, (car)=> car.files)
+  
+  @OneToOne(()=> UserEntity, (user)=> user.avatar)
+  user: UserEntity;
+  
+  @ManyToOne(() => CarEntity, (car) => car.files, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn({name: "car_id"})
-  cars: CarEntity[];
+  car: CarEntity;
 }
 

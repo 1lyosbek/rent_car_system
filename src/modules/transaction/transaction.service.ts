@@ -4,7 +4,6 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { TransactionRespository } from './transaction.repository';
 import { TransactionEntity } from './entities/transaction.entity';
 import { UserService } from '../user/user.service';
-import { ProductService } from '../product/product.service';
 import { CountExceptions, TransactionNotFoundException } from './exception/t.exception';
 import { UserEntity } from '../user/entities/user.entity';
 import { ITransactionService } from './interfaces/t.service';
@@ -17,7 +16,6 @@ import { RedisKeys } from 'src/common/enums/enum';
 export class TransactionService implements ITransactionService {
   constructor(
     @Inject("IUserService") private readonly userservice: UserService,
-    @Inject("IProductService") private readonly producService: ProductService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly repository: TransactionRespository
     ) {
@@ -26,16 +24,10 @@ export class TransactionService implements ITransactionService {
   async create(createTransactionDto: CreateTransactionDto, currentUser: UserEntity): Promise<ResData<TransactionEntity>> {
     console.log(createTransactionDto);
     const {data: foundUser} = await this.userservice.findOneById(createTransactionDto.userId);
-    const {data: foundProduct} = await this.producService.findOne(createTransactionDto.productId);
-    if (foundProduct.count < 0 || foundProduct.count < createTransactionDto.count) {
-      throw new CountExceptions()
-    }
-    foundProduct.count = foundProduct.count - createTransactionDto.count;
     const newTransaction = new TransactionEntity()
     newTransaction.createdBy = currentUser;
-    newTransaction.totalPrice = foundProduct.price * createTransactionDto.count;
     const created = Object.assign(newTransaction, createTransactionDto);
-    const createdTransaction = await this.repository.create(created, foundProduct)
+    const createdTransaction = await this.repository.create(created)
     await this.cacheManager.del(RedisKeys.TRANSACTIONS)
     return new ResData<TransactionEntity>("transaction created", 201, createdTransaction);
   }
@@ -66,13 +58,7 @@ export class TransactionService implements ITransactionService {
   async update(id: number, updateTransactionDto: UpdateTransactionDto, currentUser: UserEntity):Promise<ResData<TransactionEntity>> {
     const foundTransaction = await this.repository.findOneById(id);
     const {data: foundUser} = await this.userservice.findOneById(updateTransactionDto.userId);
-    const {data: foundProduct} = await this.producService.findOne(updateTransactionDto.productId);
-    if (foundProduct.count < 0 || foundProduct.count < updateTransactionDto.count) {
-      throw new CountExceptions()
-    }
-    foundProduct.count = foundProduct.count - updateTransactionDto.count;
     const updateTransaction = Object.assign(foundTransaction, updateTransactionDto);
-    updateTransaction.totalPrice = foundProduct.price * updateTransactionDto.count;
     updateTransaction.lastEditedBy = currentUser;
     const updated = await this.repository.update(updateTransaction);
     await this.cacheManager.del(RedisKeys.TRANSACTIONS)

@@ -10,3 +10,14 @@ export enum RedisKeys{
   TRANSACTIONS = 'transactions',
   USER_BY_ID = 'user_by_id',
 }
+
+export enum Status{
+  DEBIT= 'debit',
+  CREDIT = 'credit',
+}
+
+export enum StatusTrack{
+  CREATED = 'created',
+  PROGRESS = 'progress',
+  DONE = 'done',
+}

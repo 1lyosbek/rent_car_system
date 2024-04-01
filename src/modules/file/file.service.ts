@@ -12,11 +12,7 @@ export class FileService {
   constructor(@Inject("IFileRepository") private readonly fileRepository: FileRepository) {}
   async create(file: Express.Multer.File, createFileDto: CreateFileDto): Promise<ResData<FileEntity>> {
     const newFile = new FileEntity();
-    if(createFileDto.fileName){
-      newFile.name = createFileDto.fileName;
-    }
-    newFile.name = file.originalname;
-    newFile.location = file.path;
+    newFile.url = file.path;
     newFile.mimetype = file.mimetype;
     newFile.size = file.size;
     const created = await this.fileRepository.create(newFile)
@@ -28,8 +24,7 @@ async createMultiple(files: Array<Express.Multer.File>): Promise<ResData<FileEnt
   for (let i = 0; i < files.length; i++) {
     const element = files[i];
     const newFile = new FileEntity();
-    newFile.name = element.originalname;
-    newFile.location = element.path;
+    newFile.url = element.path;
     newFile.mimetype = element.mimetype;
     newFile.size = element.size;
     newFiles.push(newFile);
@@ -54,7 +49,7 @@ async createMultiple(files: Array<Express.Multer.File>): Promise<ResData<FileEnt
   async remove(id: ID): Promise<ResData<FileEntity>> {
     await this.findOne(id)
     const deleted = await this.fileRepository.delete(id);
-    const deleteFromFile =  unlinkSync(deleted.location)
+    const deleteFromFile =  unlinkSync(deleted.url);
     return new ResData<FileEntity>("file deleted", 200, deleted );
   }
 }
