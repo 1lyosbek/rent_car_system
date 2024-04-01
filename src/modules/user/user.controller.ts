@@ -8,7 +8,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { IUserService } from './interfaces/u.service';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
-import { RedisKeys } from 'src/common/enums/enum';
+import { RedisKeys, RoleEnum } from 'src/common/enums/enum';
+import { Auth } from 'src/common/decorator/auth.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -17,6 +18,7 @@ export class UserController {
     @Inject('IUserService') private readonly userService: IUserService,
   ) {}
 
+  @Auth(RoleEnum.ADMIN, RoleEnum.OWNER, RoleEnum.SUPERVISOR)
   @UseInterceptors(CacheInterceptor)
   @CacheKey(RedisKeys.USERS)
   @CacheTTL(0)
