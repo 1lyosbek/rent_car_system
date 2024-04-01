@@ -14,7 +14,7 @@ export class UserEntity extends BaseEntity {
   fullName: string;
 
   @Column({ type: 'enum', enum: ["client", "admin", "supervisor", "owner"], nullable: false })
-  role: RoleEnum;
+  role: string;
 
   @OneToOne(
     () => FileEntity,

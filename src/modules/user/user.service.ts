@@ -29,6 +29,7 @@ export class UserService implements IUserService {
     if (foundData) {
       return new ResData<any>('success', 200, foundData);
     }
+    
 
     await this.cacheManager.set(RedisKeys.USER_BY_ID + ':' + id, id);
 
@@ -36,6 +37,9 @@ export class UserService implements IUserService {
     if (!foundUser) {
       throw new UserNotFoundException();
     }
+
+    console.log(foundUser.company);
+    
 
     return new ResData('success', 200, foundUser);
   }
