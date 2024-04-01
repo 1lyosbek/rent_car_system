@@ -6,16 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { ModelService } from './model.service';
 import { CreateModelDto } from './dto/create-model.dto';
 import { UpdateModelDto } from './dto/update-model.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ICompanyService } from '../company/interfaces/c.service';
 
 @ApiTags('Model')
 @Controller('model')
 export class ModelController {
-  constructor(private readonly modelService: ModelService) {}
+  constructor(
+    @Inject('IModelService') private readonly modelService: ModelService,
+  ) {}
 
   @Post()
   create(@Body() createModelDto: CreateModelDto) {
@@ -29,7 +33,7 @@ export class ModelController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.modelService.findOne(+id);
+    return this.modelService.findOneById(+id);
   }
 
   @Patch(':id')

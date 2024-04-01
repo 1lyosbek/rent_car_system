@@ -7,12 +7,12 @@ import { UserEntity } from '../user/entities/user.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   providers: [
-  {provide : "IUserRepository", useClass: UserRepository},
-  {provide : "IUserService", useClass: UserService}
+    { provide: 'IUserRepository', useClass: UserRepository },
+    { provide: 'IUserService', useClass: UserService },
   ],
   exports: [
-  {provide : "IUserRepository", useClass: UserRepository},
-  {provide : "IUserService", useClass: UserService}
-],
+    { provide: 'IUserRepository', useClass: UserRepository },
+    { provide: 'IUserService', useClass: UserService },
+  ],
 })
 export class SharedModule {}
