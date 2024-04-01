@@ -41,13 +41,14 @@ export class TransactionService implements ITransactionService {
     newTransaction.user = foundUser;
     newTransaction.company = foundCompany;
     newTransaction.car = foundCar;
-    newTransaction.price = createTransactionDto.price;
     newTransaction.startKm = createTransactionDto.startKm;
     newTransaction.carData = foundCar;
     newTransaction.userData = foundUser;
     newTransaction.endKm = createTransactionDto.endKm;
     newTransaction.createdBy = currentUser;
     newTransaction.statusTrack = StatusTrack.CREATED;
+    const totalKm = createTransactionDto.endKm - createTransactionDto.startKm;
+    newTransaction.price = totalKm * foundCar.price;
     const createdTransaction = await this.repository.create(newTransaction);
     await this.cacheManager.del(RedisKeys.TRANSACTIONS);
     return new ResData<TransactionEntity>(
