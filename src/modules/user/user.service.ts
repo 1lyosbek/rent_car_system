@@ -8,6 +8,7 @@ import { UserEntity } from './entities/user.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { RedisKeys } from 'src/common/enums/enum';
+import { CompanyEntity } from "../company/entities/company.entity";
 
 @Injectable()
 export class UserService implements IUserService {
@@ -29,7 +30,6 @@ export class UserService implements IUserService {
     if (foundData) {
       return new ResData<any>('success', 200, foundData);
     }
-    
 
     await this.cacheManager.set(RedisKeys.USER_BY_ID + ':' + id, id);
 
@@ -39,7 +39,6 @@ export class UserService implements IUserService {
     }
 
     console.log(foundUser.company);
-    
 
     return new ResData('success', 200, foundUser);
   }
@@ -55,5 +54,10 @@ export class UserService implements IUserService {
     }
 
     return resData;
+  }
+
+  async findAllClients(): Promise<ResData<UserEntity[]>> {
+    const foundData = await this.repository.findAllClients();
+    return new ResData('success', 200, foundData);
   }
 }

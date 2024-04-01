@@ -12,7 +12,7 @@ import { UserService } from 'src/modules/user/user.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    @Inject("IUserService") private readonly userService: UserService,
+    @Inject('IUserService') private readonly userService: UserService,
     private jwtService: JwtService,
   ) {}
 

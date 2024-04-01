@@ -7,7 +7,7 @@ export enum RoleEnum {
 
 export enum RedisKeys {
   USERS = 'users',
-  PRODUCTS = 'products',
+  CLIENTS = 'clients',
   TRANSACTIONS = 'transactions',
   USER_BY_ID = 'user_by_id',
 }

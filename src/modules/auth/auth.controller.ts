@@ -23,7 +23,7 @@ import { ICompanyService } from '../company/interfaces/c.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    @Inject("ICompanyService") private readonly companyService: ICompanyService,
+    @Inject('ICompanyService') private readonly companyService: ICompanyService,
     @Inject('IUserService') private readonly userService: UserService,
     @Inject('IFileService') private readonly fileService: FileService,
   ) {}
@@ -53,8 +53,10 @@ export class AuthController {
 
   @Auth(RoleEnum.ADMIN, RoleEnum.OWNER)
   @Post('register')
-  async register(@Body() createDto: RegisterDto, @CurrentUser() currentUser: UserEntity) {
-
+  async register(
+    @Body() createDto: RegisterDto,
+    @CurrentUser() currentUser: UserEntity,
+  ) {
     const { data: foundUser } = await this.userService.findOneByPhone(
       createDto.phone,
     );
@@ -62,22 +64,27 @@ export class AuthController {
     if (foundUser) {
       throw new PhoneExistException();
     }
-    
-    console.log("current :", currentUser);
-    
-    const { data: foundCompany } = await this.companyService.findOneById(currentUser.company.id)
-    
-    if (currentUser.role === "owner") {      
-      createDto.companyId = currentUser.company.id
+
+    console.log('current :', currentUser);
+    console.log(55);
+    const { data: foundCompany } = await this.companyService.findOneById(
+      createDto.companyId,
+    );
+    console.log(1);
+    if (currentUser.role === 'owner') {
+      createDto.companyId = currentUser.company.id;
     }
 
-    console.log(1);
-    
+
 
     const { data: foundAvatar } = await this.fileService.findOne(
       createDto.avatar,
     );
 
-    return await this.authService.register(createDto, foundAvatar, foundCompany);
+    return await this.authService.register(
+      createDto,
+      foundAvatar,
+      foundCompany,
+    );
   }
 }

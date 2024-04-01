@@ -3,18 +3,26 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ID } from 'src/common/types/type';
 import { IUserRepository } from './interfaces/u.repository';
+import { CompanyEntity } from '../company/entities/company.entity';
 
 export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity) private repository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async findOneById(id: ID): Promise<UserEntity | undefined> {
-    return await this.repository.findOne({ where: { id }, relations: ['company'] });
+    return await this.repository.findOne({
+      where: { id },
+      relations: ['company'],
+    });
   }
 
   async findByPhone(phone: number): Promise<UserEntity | undefined> {
     return await this.repository.findOneBy({ phone });
+  }
+
+  async findAllClients(): Promise<UserEntity[]> {
+    return await this.repository.findBy({ role: 'client' });
   }
 
   async findAllUsers(): Promise<UserEntity[]> {
