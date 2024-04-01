@@ -16,7 +16,7 @@ export class CompanyRepository implements ICompanyRepository {
     return await this.repository.findOneBy({ id });
   }
   async getAll(): Promise<CompanyEntity[]> {
-    return await this.repository.find();
+    return await this.repository.find({relations: ['companies']});
   }
   async update(entity: CompanyEntity): Promise<CompanyEntity> {
     return await this.repository.save(entity);

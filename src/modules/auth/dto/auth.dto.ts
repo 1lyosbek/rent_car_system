@@ -2,11 +2,16 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleEnum } from 'src/common/enums/enum';
 
+const newRoleEnum = { ...RoleEnum };
+delete newRoleEnum.ADMIN
+const withoutAdminRole = JSON.parse(JSON.stringify(newRoleEnum));
+
+
 export class LoginDto {
   @ApiProperty({
-    type: String,
+    type: Number,
   })
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
   phone: number;
 }
@@ -34,11 +39,11 @@ export class RegisterDto {
   avatar: number;
 
   @ApiProperty({
-    enum: RoleEnum,
+    enum: withoutAdminRole,
   })
-  @IsEnum(RoleEnum)
+  @IsEnum(withoutAdminRole)
   @IsNotEmpty()
-  role: RoleEnum;
+  role: string;
 
   @ApiPropertyOptional({
     type: Number,
@@ -46,4 +51,27 @@ export class RegisterDto {
   @IsInt()
   @IsOptional()
   companyId: number;
+}
+
+export class ClientRegisterDto {
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  phone: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  fullName: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  avatar: number;
 }
