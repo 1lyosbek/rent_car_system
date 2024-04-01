@@ -10,15 +10,19 @@ import { FileRepository } from '../file/file.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature(([FileEntity])),
+    TypeOrmModule.forFeature([FileEntity]),
     JwtModule.register({
       global: true,
       secret: 'ok',
       signOptions: { expiresIn: '1d' },
     }),
-    SharedModule, 
+    SharedModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, {provide: "IFileService", useClass: FileService}, {provide:"IFileRepository", useClass: FileRepository}],
+  providers: [
+    AuthService,
+    { provide: 'IFileService', useClass: FileService },
+    { provide: 'IFileRepository', useClass: FileRepository },
+  ],
 })
 export class AuthModule {}

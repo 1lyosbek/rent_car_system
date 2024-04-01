@@ -4,12 +4,13 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AllExceptionsFilter } from './lib/AllExceptionFilter';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { config } from './common/config/config';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors();
 
-  app.useStaticAssets("upload");
+  app.useStaticAssets('upload');
 
   app.useBodyParser('json');
 
@@ -36,10 +37,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(7777, () => {
-    console.log(`http://localhost:${7777}`);
-    console.log(`http://localhost:${7777}/docs`);
+  await app.listen(config.port, () => {
+    console.log(`http://localhost:${config.port}`);
+    console.log(`http://localhost:${config.port}/docs`);
   });
 }
 bootstrap();
-

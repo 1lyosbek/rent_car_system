@@ -12,7 +12,8 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { ICompanyService } from './interfaces/c.service';
 import { IUserService } from '../user/interfaces/u.service';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags } from '@nestjs/swagger';
+import { IFileService } from '../file/interfaces/f.service';
 
 @ApiTags('Company')
 @Controller('company')
@@ -20,6 +21,7 @@ export class CompanyController {
   constructor(
     @Inject('IUserService') private readonly userService: IUserService,
     @Inject('ICompanyService') private readonly companyService: ICompanyService,
+    @Inject('IFileService') private readonly fileService: IFileService,
   ) {}
 
   @Post()
@@ -27,7 +29,10 @@ export class CompanyController {
     const { data: foundUser } = await this.userService.findOneById(
       createCompanyDto.owner,
     );
-    return this.companyService.create(createCompanyDto, foundUser);
+    const { data: foundFile } = await this.fileService.findOne(
+      createCompanyDto.logo,
+    );
+    return this.companyService.create(createCompanyDto, foundUser, foundFile);
   }
 
   @Get()

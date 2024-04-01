@@ -7,7 +7,8 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ICompanyService } from './interfaces/c.service';
 import { IUserService } from '../user/interfaces/u.service';
 import { ICompanyRepository } from './interfaces/c.repository';
-import { CompanyNotFoundException } from "./exceptions/company.exceptions";
+import { CompanyNotFoundException } from './exceptions/company.exceptions';
+import { FileEntity } from '../file/entities/file.entity';
 
 @Injectable()
 export class CompanyService implements ICompanyService {
@@ -19,11 +20,12 @@ export class CompanyService implements ICompanyService {
   async create(
     createCompanyDto: CreateCompanyDto,
     foundOwner: UserEntity,
+    file: FileEntity,
   ): Promise<ResData<CompanyEntity>> {
     const newCompany = new CompanyEntity();
     newCompany.name = createCompanyDto.name;
     newCompany.owner = foundOwner;
-    newCompany.logo = createCompanyDto.logo;
+    newCompany.logo = file;
 
     return new ResData(
       'Success',

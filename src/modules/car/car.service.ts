@@ -1,26 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { CarEntity } from './entities/car.entity';
+import { ResData } from 'src/lib/resData';
+import { ICarService } from './interfaces/car.service';
+import { ICarRepository } from './interfaces/car.repository';
+import { CarNotFoundException } from './exceptions/car.exception';
+import { CompanyEntity } from '../company/entities/company.entity';
+import { ModelEntity } from '../model/entities/model.entity';
 
 @Injectable()
-export class CarService {
-  create(createCarDto: CreateCarDto) {
-    return 'This action adds a new car';
+export class CarService implements ICarService {
+  constructor(
+    @Inject('ICarRepository') private readonly repository: ICarRepository,
+  ) {}
+  async create(
+    createCarDto: CreateCarDto,
+    model: ModelEntity,
+    company: CompanyEntity,
+  ): Promise<ResData<CarEntity>> {
+    const newCar = new CarEntity();
+    newCar.name = createCarDto.name;
+    newCar.model = model;
+    newCar.company = company;
+    newCar.info = createCarDto.info;
+    newCar.price = createCarDto.price;
+
+    return new ResData(
+      'Success',
+      HttpStatus.CREATED,
+      await this.repository.create(newCar),
+    );
   }
 
-  findAll() {
-    return `This action returns all car`;
+  async findAll(): Promise<ResData<Array<CarEntity>>> {
+    const allCompanies = await this.repository.getAll();
+    return new ResData('Success', HttpStatus.OK, allCompanies);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} car`;
+  async findOneById(id: number) {
+    const foundCar = await this.repository.getById(id);
+    if (!foundCar) {
+      throw new CarNotFoundException(id);
+    }
+    return new ResData('Success', HttpStatus.OK, foundCar);
   }
 
-  update(id: number, updateCarDto: UpdateCarDto) {
-    return `This action updates a #${id} car`;
+  async update(id: number, updateCarDto: UpdateCarDto) {
+    const { data: foundCar } = await this.findOneById(id);
+    const update = Object.assign(foundCar, updateCarDto);
+    const updatedCar = await this.repository.update(update);
+    return new ResData('Success', HttpStatus.OK, updatedCar);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} car`;
+  async remove(id: number): Promise<ResData<CarEntity>> {
+    await this.findOneById(id);
+    const deletedCar = await this.repository.delete(id);
+    return new ResData('Success', HttpStatus.OK, deletedCar);
   }
 }

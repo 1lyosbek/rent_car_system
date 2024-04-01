@@ -6,20 +6,34 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ICompanyService } from '../company/interfaces/c.service';
+import { IModelService } from '../model/interfaces/model.service';
+import { ICarService } from './interfaces/car.service';
 
 @ApiTags('Car')
 @Controller('car')
 export class CarController {
-  constructor(private readonly carService: CarService) {}
+  constructor(
+    @Inject('ICarService') private readonly carService: ICarService,
+    @Inject('ICompanyService') private readonly companyService: ICompanyService,
+    @Inject('IModelService') private readonly modelService: IModelService,
+  ) {}
 
   @Post()
-  create(@Body() createCarDto: CreateCarDto) {
-    return this.carService.create(createCarDto);
+  async create(@Body() createCarDto: CreateCarDto) {
+    const { data: foundModel } = await this.modelService.findOneById(
+      createCarDto.model_id,
+    );
+    const { data: foundCompany } = await this.companyService.findOneById(
+      createCarDto.company_id,
+    );
+    return this.carService.create(createCarDto, foundModel, foundCompany);
   }
 
   @Get()
@@ -29,7 +43,7 @@ export class CarController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.carService.findOne(+id);
+    return this.carService.findOneById(+id);
   }
 
   @Patch(':id')

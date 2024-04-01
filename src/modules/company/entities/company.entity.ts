@@ -23,7 +23,7 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToOne(() => FileEntity)
   @JoinColumn({ name: 'logo' })
-  logo: number;
+  logo: FileEntity;
 
   @OneToMany(() => CarEntity, (car) => car.company)
   cars: Array<CarEntity>;
