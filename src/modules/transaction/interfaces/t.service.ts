@@ -10,6 +10,7 @@ export interface ITransactionService{
     findOneById(id: ID): Promise<ResData<TransactionEntity>>;
     findOneByUserId(id: ID): Promise<ResData<TransactionEntity[]>>;
     findOneByProductId(id: ID): Promise<ResData<TransactionEntity[]>>;
-    create(transaction: CreateTransactionDto, currentUser: UserEntity):Promise<ResData<TransactionEntity>>;
+    createDebit(transaction: CreateTransactionDto, currentUser: UserEntity):Promise<ResData<TransactionEntity>>;
+    createCredit(transaction: CreateTransactionDto, currentUser: UserEntity):Promise<ResData<TransactionEntity>>;
     update(id: ID, transaction: UpdateTransactionDto, currentUser: UserEntity): Promise<ResData<TransactionEntity>>;
 }

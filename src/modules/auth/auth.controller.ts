@@ -80,20 +80,4 @@ export class AuthController {
 
     return await this.authService.register(createDto, foundAvatar, foundCompany);
   }
-
-  @Post('register')
-  async register_without_admin(@Body() createDto: RegisterDto) {
-    const { data: foundUser } = await this.userService.findOneByPhone(
-      createDto.phone,
-    );
-
-    if (foundUser) {
-      throw new PhoneExistException();
-    }
-    const { data: foundAvatar } = await this.fileService.findOne(
-      createDto.avatar,
-    );
-
-    return await this.authService.register(createDto, foundAvatar);
-  }
 }

@@ -13,31 +13,20 @@ import { CompanyEntity } from '../company/entities/company.entity';
 
 @Module({
   imports: [
-<<<<<<< HEAD
-    TypeOrmModule.forFeature([FileEntity]),
-=======
     TypeOrmModule.forFeature(([FileEntity, CompanyEntity])),
->>>>>>> d72e683be1bb8453f70a7a06d8b9687730861309
     JwtModule.register({
       global: true,
       secret: 'ok',
       signOptions: { expiresIn: '1d' },
     }),
-    SharedModule,
+    SharedModule, 
   ],
   controllers: [AuthController],
-<<<<<<< HEAD
-  providers: [
-    AuthService,
-    { provide: 'IFileService', useClass: FileService },
-    { provide: 'IFileRepository', useClass: FileRepository },
-=======
   providers: [AuthService, 
     {provide: "IFileService", useClass: FileService},
     {provide:"IFileRepository", useClass: FileRepository},
     { provide: "ICompanyService", useClass: CompanyService },
     { provide: "ICompanyRepository", useClass: CompanyRepository },
->>>>>>> d72e683be1bb8453f70a7a06d8b9687730861309
   ],
 })
 export class AuthModule {}
