@@ -9,16 +9,22 @@ import { CarService } from '../car/car.service';
 import { CarRepository } from '../car/car.repository';
 import { CompanyService } from '../company/company.service';
 import { CompanyRepository } from '../company/company.repository';
+import { CompanyEntity } from '../company/entities/company.entity';
+import { CarEntity } from "../car/entities/car.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TransactionEntity]), SharedModule],
+  imports: [
+    TypeOrmModule.forFeature([TransactionEntity, CompanyEntity, CarEntity]),
+    SharedModule,
+  ],
   controllers: [TransactionController],
   providers: [
-  TransactionService, TransactionRespository,
-  { provide: 'ICompanyService', useClass: CompanyService },
-  { provide: 'ICompanyRepository', useClass: CompanyRepository },
-  { provide: 'ICarService', useClass: CarService },
-  { provide: 'ICarRepository', useClass: CarRepository },
-],
+    TransactionService,
+    TransactionRespository,
+    { provide: 'ICompanyService', useClass: CompanyService },
+    { provide: 'ICompanyRepository', useClass: CompanyRepository },
+    { provide: 'ICarService', useClass: CarService },
+    { provide: 'ICarRepository', useClass: CarRepository },
+  ],
 })
 export class TransactionModule {}

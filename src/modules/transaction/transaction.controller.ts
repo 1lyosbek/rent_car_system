@@ -1,10 +1,10 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
   Put,
   UseInterceptors,
 } from '@nestjs/common';
@@ -24,22 +24,33 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Auth(RoleEnum.ADMIN, RoleEnum.CLIENT, RoleEnum.OWNER, RoleEnum.SUPERVISOR)
-  @Post()
+  @Post('/debit')
   createDebit(
     @Body() createTransactionDto: CreateTransactionDto,
     @CurrentUser() currentUser: UserEntity,
   ) {
-    if (currentUser.role === "owner" || currentUser.role === "supervisor") {
+    if (currentUser.role === 'owner' || currentUser.role === 'supervisor') {
       createTransactionDto.companyId = currentUser.company.id;
     }
-    return this.transactionService.createDebit(createTransactionDto, currentUser);
+    return this.transactionService.createDebit(
+      createTransactionDto,
+      currentUser,
+    );
   }
-  @Post()
+
+  @Auth(RoleEnum.OWNER, RoleEnum.SUPERVISOR, RoleEnum.ADMIN)
+  @Post('/credit')
   createCredit(
     @Body() createTransactionDto: CreateTransactionDto,
     @CurrentUser() currentUser: UserEntity,
   ) {
-    return this.transactionService.create(createTransactionDto, currentUser);
+    if (currentUser.role === 'owner' || currentUser.role === 'supervisor') {
+      createTransactionDto.companyId = currentUser.company.id;
+    }
+    return this.transactionService.createCredit(
+      createTransactionDto,
+      currentUser,
+    );
   }
 
   @UseInterceptors(CacheInterceptor)

@@ -13,7 +13,6 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'car_data', type: 'json', nullable: true })
   carData: CarEntity;
 
-  
   @Column({ name: 'price', type: 'bigint', nullable: false })
   price: number;
 
@@ -23,13 +22,28 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'end_km', type: 'int', nullable: true })
   endKm: number;
 
-  @Column({ name: 'start_date', type: 'timestamp', nullable: true, default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    name: 'start_date',
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   start_date: Date;
 
-  @Column({ name: 'end_date', type: 'timestamp', nullable: true, default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    name: 'end_date',
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   end_date: Date;
 
-  @Column({ name: 'status', type: "enum", enum: ["debit", "credit"], nullable: false})
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: ['debit', 'credit'],
+    nullable: false,
+  })
   status: Status;
 
   @Column({ name: 'started_km', type: 'int', nullable: true })
@@ -38,17 +52,18 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'ended_km', type: 'int', nullable: true })
   endedKm: number;
 
-  @Column({ name: 'status_track', type: "enum", enum: ["created", "progress", "done"], nullable: false })
+  @Column({
+    name: 'status_track',
+    type: 'enum',
+    enum: ['created', 'progress', 'done'],
+    nullable: false,
+  })
   statusTrack: StatusTrack;
 
-  @ManyToOne(
-    () => CompanyEntity,
-    (company) => company.transactions,
-    {
-      onDelete: 'SET NULL',
-      nullable: true,
-    },
-  )
+  @ManyToOne(() => CompanyEntity, (company) => company.transactions, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'company_id' })
   company: CompanyEntity;
 

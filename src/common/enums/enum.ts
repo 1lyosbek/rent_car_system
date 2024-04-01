@@ -5,19 +5,19 @@ export enum RoleEnum {
   SUPERVISOR = 'supervisor',
 }
 
-export enum RedisKeys{
+export enum RedisKeys {
   USERS = 'users',
   PRODUCTS = 'products',
   TRANSACTIONS = 'transactions',
   USER_BY_ID = 'user_by_id',
 }
 
-export enum Status{
-  DEBIT= 'debit',
+export enum Status {
+  DEBIT = 'debit',
   CREDIT = 'credit',
 }
 
-export enum StatusTrack{
+export enum StatusTrack {
   CREATED = 'created',
   PROGRESS = 'progress',
   DONE = 'done',
