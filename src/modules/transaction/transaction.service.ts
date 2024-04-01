@@ -1,18 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { TransactionRespository } from './transaction.repository';
-import { TransactionEntity } from './entities/transaction.entity';
-import { UserService } from '../user/user.service';
-import { TransactionNotFoundException } from './exception/t.exception';
-import { UserEntity } from '../user/entities/user.entity';
-import { ITransactionService } from './interfaces/t.service';
-import { ResData } from 'src/lib/resData';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { RedisKeys, Status, StatusTrack } from 'src/common/enums/enum';
-import { ICarService } from '../car/interfaces/car.service';
-import { ICompanyService } from '../company/interfaces/c.service';
+import { Inject, Injectable } from "@nestjs/common";
+import { CreateTransactionDto } from "./dto/create-transaction.dto";
+import { UpdateTransactionDto } from "./dto/update-transaction.dto";
+import { TransactionRespository } from "./transaction.repository";
+import { TransactionEntity } from "./entities/transaction.entity";
+import { UserService } from "../user/user.service";
+import { TransactionNotFoundException } from "./exception/t.exception";
+import { UserEntity } from "../user/entities/user.entity";
+import { ITransactionService } from "./interfaces/t.service";
+import { ResData } from "src/lib/resData";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
+import { RedisKeys, Status, StatusTrack } from "src/common/enums/enum";
+import { ICarService } from "../car/interfaces/car.service";
+import { ICompanyService } from "../company/interfaces/c.service";
 
 @Injectable()
 export class TransactionService implements ITransactionService {
@@ -47,6 +47,7 @@ export class TransactionService implements ITransactionService {
     newTransaction.userData = foundUser;
     newTransaction.endKm = createTransactionDto.endKm;
     newTransaction.createdBy = currentUser;
+    newTransaction.statusTrack = StatusTrack.CREATED;
     const createdTransaction = await this.repository.create(newTransaction);
     await this.cacheManager.del(RedisKeys.TRANSACTIONS);
     return new ResData<TransactionEntity>(
