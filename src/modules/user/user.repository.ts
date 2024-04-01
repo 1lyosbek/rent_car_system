@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findAllClients(): Promise<UserEntity[]> {
-    return await this.repository.findBy({ role: 'client' });
+    return await this.repository.find({where: {role: 'client'}});
   }
 
   async findAllUsers(): Promise<UserEntity[]> {

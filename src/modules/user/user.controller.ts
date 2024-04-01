@@ -30,18 +30,18 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
+  @Auth(RoleEnum.ADMIN, RoleEnum.OWNER, RoleEnum.SUPERVISOR)
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey(RedisKeys.CLIENTS)
+  @CacheTTL(0)
+  @Get('clients')
+  async getClients() {
+    return this.userService.findAllClients();
+  }
 
   @Get('/:id')
   findOneById(@Param('id') id: string) {
     return this.userService.findOneById(+id);
   }
 
-  @Auth(RoleEnum.ADMIN, RoleEnum.OWNER, RoleEnum.SUPERVISOR)
-  @UseInterceptors(CacheInterceptor)
-  @CacheKey(RedisKeys.CLIENTS)
-  @CacheTTL(0)
-  @Get('/clients')
-  async getClients() {
-    return this.userService.findAllClients();
-  }
 }
