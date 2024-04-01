@@ -7,8 +7,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'type
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
-  @Column({ name: 'phone', type: 'integer', nullable: false })
-  phone: string;
+  @Column({ name: 'phone', type: 'bigint', nullable: false })
+  phone: number;
 
   @Column({ name: 'full_name', type: 'varchar', length: 256, nullable: true })
   fullName: string;
@@ -23,12 +23,12 @@ export class UserEntity extends BaseEntity {
   @JoinColumn({name: "avatar"})
   avatar: FileEntity;
 
-  @ManyToOne(() => CompanyEntity, (company)=> company.users)
+  @ManyToOne(() => CompanyEntity, (company)=> company.users, {onDelete: "SET NULL", nullable: true})
   @JoinColumn({name: "company_id"})
   company: CompanyEntity;
 
   @OneToMany(() => CompanyEntity, (company)=> company.owner)
-  companies: Array<CompanyEntity>;
+  owner_company: Array<CompanyEntity>;
   
   @OneToMany(() => TransactionEntity, (transaction)=> transaction.user)
   transactions: Array<TransactionEntity>;

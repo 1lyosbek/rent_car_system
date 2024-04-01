@@ -19,20 +19,6 @@ export class FileService {
     return new ResData<FileEntity>("file created", 201, created)
   }
 
-async createMultiple(files: Array<Express.Multer.File>): Promise<ResData<FileEntity[]>>{
-  const newFiles = [];
-  for (let i = 0; i < files.length; i++) {
-    const element = files[i];
-    const newFile = new FileEntity();
-    newFile.url = element.path;
-    newFile.mimetype = element.mimetype;
-    newFile.size = element.size;
-    newFiles.push(newFile);
-  }
-  const created = await this.fileRepository.createMultiliple(newFiles)
-  return new ResData<FileEntity[]>("files created", 201, created)
-}
-
   async findAll(): Promise<ResData<FileEntity[]>> {
     const res = await this.fileRepository.findAll();
     return new ResData<FileEntity[]>("all files", 200, res)

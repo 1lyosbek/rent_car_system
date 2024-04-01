@@ -6,5 +6,4 @@ export interface IFileRepository{
     findAll(): Promise<FileEntity[]>;
     create(file: FileEntity): Promise<FileEntity>;
     delete(id: ID): Promise<FileEntity>;
-    createMultiliple(files: Array<FileEntity>): Promise<FileEntity[]>
 }

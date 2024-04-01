@@ -2,15 +2,15 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { IAuthService, ILoginData } from './interfaces/auth.service';
 import { ResData } from 'src/lib/resData';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { LoginOrPasswordWrongException } from './exception/auth.exception';
+import { PhoneExistException, PhoneIsWrongException } from './exception/auth.exception';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserRepository } from '../user/user.repository';
-// import { hashed, compare } from 'src/lib/bcrypt';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { RedisKeys } from 'src/common/enums/enum';
+import { FileEntity } from '../file/entities/file.entity';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -22,13 +22,12 @@ export class AuthService implements IAuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<ResData<ILoginData>> {
-    throw new Error("login")
-    const { data: foundUser } = await this.userService.findOneByLogin(
+    const { data: foundUser } = await this.userService.findOneByPhone(
       dto.phone,
     );
 
     if (!foundUser) {
-      throw new LoginOrPasswordWrongException();
+      throw new PhoneIsWrongException();
     }
 
     const token = await this.jwtService.signAsync({ id: foundUser.id });
@@ -39,19 +38,21 @@ export class AuthService implements IAuthService {
     });
   }
 
-  async register(dto: RegisterDto): Promise<ResData<ILoginData>> {
-    throw new Error("df")
-    const { data: foundUser } = await this.userService.findOneByLogin(
-      dto.login,
+  async register(dto: RegisterDto, foundFile: FileEntity): Promise<ResData<ILoginData>> {
+    const { data: foundUser } = await this.userService.findOneByPhone(
+      dto.phone,
     );
 
     if (foundUser) {
-      throw new LoginOrPasswordWrongException();
+      throw new PhoneExistException();
     } 
-    // dto.password = await hashed(dto.password);
     
     const newUser = new UserEntity();
-  
+    newUser.phone = dto.phone;
+    newUser.fullName = dto.fullName;
+    newUser.avatar = foundFile;
+    newUser.role = dto.role;
+
     const savedUser = await this.userRepository.createUser(newUser);
 
     await this.cacheManager.del(RedisKeys.USERS)

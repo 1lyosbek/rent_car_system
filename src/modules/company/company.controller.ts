@@ -1,15 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CompanyService } from './company.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { ICompanyService } from './interfaces/c.service';
+import { IUserService } from '../user/interfaces/u.service';
 
 @Controller('company')
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(
+    @Inject("IUserService") private readonly userService: IUserService,
+    @Inject("ICompanyService") private readonly companyService: ICompanyService
+    ) {}
 
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  async create(@Body() createCompanyDto: CreateCompanyDto) {
+    const { data: foundUser } = await this.userService.findOneById(createCompanyDto.owner)
+    return this.companyService.create(createCompanyDto, foundUser);
   }
 
   @Get()
@@ -19,7 +24,7 @@ export class CompanyController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+    return this.companyService.findOneById(+id);
   }
 
   @Patch(':id')

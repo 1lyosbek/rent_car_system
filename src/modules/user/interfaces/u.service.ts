@@ -4,6 +4,6 @@ import { ResData } from "src/lib/resData";
 
 export interface IUserService{
     findAll(): Promise<ResData<UserEntity[]>>;
-    findOneById(id: ID): Promise<ResData<UserEntity>>;
-    findOneByLogin(login: string): Promise<ResData<UserEntity | undefined>>;
+    findOneById(id: ID): Promise<ResData<UserEntity | undefined>>;
+    findOneByPhone(phone: number): Promise<ResData<UserEntity | undefined>>;
 }

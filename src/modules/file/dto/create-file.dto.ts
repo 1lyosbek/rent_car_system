@@ -1,11 +1,11 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { IsInt, IsOptional } from "class-validator";
 
 export class CreateFileDto {
     @ApiPropertyOptional({
-        type: String
+        type: Number
     })
-    @IsString()
+    @IsInt()
     @IsOptional()
-    fileName: string;
+    carId: number;
 }

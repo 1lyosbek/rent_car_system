@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleEnum } from 'src/common/enums/enum';
 
 export class LoginDto {
@@ -8,23 +8,16 @@ export class LoginDto {
   })
   @IsString()
   @IsNotEmpty()
-  phone: string;
+  phone: number;
 }
 
 export class RegisterDto {
   @ApiProperty({
-    type: String,
+    type: Number,
   })
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  login: string;
-
-  @ApiProperty({
-    type: String,
-  })
-  @IsString()
-  @IsNotEmpty()
-  password: string;
+  phone: number;
 
   @ApiProperty({
     type: String,
@@ -34,9 +27,23 @@ export class RegisterDto {
   fullName: string;
 
   @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  avatar: number;
+
+  @ApiProperty({
     enum: RoleEnum,
   })
   @IsEnum(RoleEnum)
   @IsNotEmpty()
   role: RoleEnum;
+
+  @ApiPropertyOptional({
+    type: Number,
+  })
+  @IsInt()
+  @IsOptional()
+  companyId: number;
 }

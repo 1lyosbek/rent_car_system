@@ -1,7 +1,8 @@
 export enum RoleEnum {
-  WORKER = 'worker',
-  BOSS = 'boss',
+  CLIENT = 'client',
+  OWNER = 'owner',
   ADMIN = 'admin',
+  SUPERVISOR = 'supervisor',
 }
 
 export enum RedisKeys{

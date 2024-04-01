@@ -24,9 +24,9 @@ export class CompanyEntity extends BaseEntity {
     @OneToMany(()=> ModelEntity, (model) => model.company)
     models: Array<ModelEntity>;
 
-    @ManyToOne(()=> UserEntity, (user)=> user.company)
+    @ManyToOne(() => UserEntity, (user) => user.owner_company)
     @JoinColumn({ name: "owner" })
-    owner: Array<UserEntity>;
+    owner: UserEntity;
 
     @OneToMany(() => TransactionEntity, (transaction) => transaction.company)
     transactions: Array<TransactionEntity>;

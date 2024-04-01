@@ -27,26 +27,6 @@ export class FileController {
 async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() dto: CreateFileDto) {
   return await this.fileService.create(file, dto);
 }
-@ApiBody({
-  schema:{
-    type: "object",  
-    properties: {
-      ['files']: {
-        type: "array",
-        items:{
-          type: "string",
-          format: "binary"
-        }
-      },
-    },
-  }
-})
-@ApiConsumes("multipart/form-data")
-@Post('multiple-upload')
-@UseInterceptors(FilesInterceptor('files', 2, fileOptions))
-async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
-  return await this.fileService.createMultiple(files)
-}
 
   @Get()
   findAll() {

@@ -13,10 +13,6 @@ export class FileRepository implements IFileRepository{
         return await this.fileRepository.save(file);
     }
 
-    async createMultiliple(files: Array<FileEntity>):Promise<Array<FileEntity>>{
-        const created = await this.fileRepository.save(files);
-        return created
-    }
     async findAll(): Promise<FileEntity[]> {
         return await this.fileRepository.find();
     }

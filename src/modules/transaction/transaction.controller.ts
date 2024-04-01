@@ -14,7 +14,7 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Auth(RoleEnum.ADMIN, RoleEnum.BOSS, RoleEnum.WORKER)
+  // @Auth(RoleEnum.ADMIN, RoleEnum.BOSS, RoleEnum.WORKER)
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto, @CurrentUser() currentUser: UserEntity) {
     return this.transactionService.create(createTransactionDto, currentUser);
@@ -37,7 +37,7 @@ export class TransactionController {
     return await this.transactionService.findOneByProductId(+id);
   }
 
-  @Auth(RoleEnum.ADMIN, RoleEnum.BOSS, RoleEnum.WORKER)
+  // @Auth(RoleEnum.ADMIN, RoleEnum.BOSS, RoleEnum.WORKER)
   @Put(':id')
   update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto, @CurrentUser() currentUser: UserEntity) {
     return this.transactionService.update(+id, updateTransactionDto, currentUser);
