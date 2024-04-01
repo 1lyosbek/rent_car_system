@@ -27,10 +27,9 @@ async function bootstrap() {
   );
 
   const options = new DocumentBuilder()
-    .setTitle('Supermarket basement')
-    .setDescription('this is v1')
+    .setTitle('Rent Car')
+    .setDescription('Rent Car Project Description Section')
     .setVersion('1.0.0')
-    .addTag('Supermarket')
     .addBearerAuth()
     .build();
 
