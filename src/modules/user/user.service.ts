@@ -12,23 +12,25 @@ import { RedisKeys } from 'src/common/enums/enum';
 @Injectable()
 export class UserService implements IUserService {
   constructor(
-    @Inject("IUserRepository") private readonly repository: IUserRepository,
+    @Inject('IUserRepository') private readonly repository: IUserRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async findAll():Promise<ResData<UserEntity[]>> {
+  async findAll(): Promise<ResData<UserEntity[]>> {
     const foundUsers = await this.repository.findAllUsers();
-    return new ResData<UserEntity[]>("users", 200, foundUsers);
+    return new ResData<UserEntity[]>('users', 200, foundUsers);
   }
 
-  async findOneById(id: ID):Promise<ResData<UserEntity>> {
-    const foundData = await this.cacheManager.get(RedisKeys.USER_BY_ID + ':' + id);
+  async findOneById(id: ID): Promise<ResData<UserEntity>> {
+    const foundData = await this.cacheManager.get(
+      RedisKeys.USER_BY_ID + ':' + id,
+    );
 
-    if (foundData) {      
+    if (foundData) {
       return new ResData<any>('success', 200, foundData);
     }
 
-    await this.cacheManager.set(RedisKeys.USER_BY_ID + ':' + id, id)
+    await this.cacheManager.set(RedisKeys.USER_BY_ID + ':' + id, id);
 
     const foundUser = await this.repository.findOneById(id);
     if (!foundUser) {
@@ -38,7 +40,7 @@ export class UserService implements IUserService {
     return new ResData('success', 200, foundUser);
   }
 
-  async findOneByPhone(phone: number):Promise<ResData<UserEntity>> {
+  async findOneByPhone(phone: number): Promise<ResData<UserEntity>> {
     const foundData = await this.repository.findByPhone(phone);
 
     const resData = new ResData('success', 200, foundData);
