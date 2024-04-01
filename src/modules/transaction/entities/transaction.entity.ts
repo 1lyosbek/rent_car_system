@@ -39,7 +39,7 @@ export class TransactionEntity extends BaseEntity {
   endedKm: number;
 
   @Column({ name: 'status_track', type: "enum", enum: ["created", "progress", "done"], nullable: false })
-  status_track: StatusTrack;
+  statusTrack: StatusTrack;
 
   @ManyToOne(
     () => CompanyEntity,
@@ -64,7 +64,7 @@ export class TransactionEntity extends BaseEntity {
     nullable: true,
   })
   @JoinColumn({ name: 'car_id' })
-  car: UserEntity;
+  car: CarEntity;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.id, {
     onDelete: 'SET NULL',

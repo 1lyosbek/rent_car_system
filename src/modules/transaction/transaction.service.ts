@@ -10,24 +10,37 @@ import { ITransactionService } from './interfaces/t.service';
 import { ResData } from 'src/lib/resData';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { RedisKeys } from 'src/common/enums/enum';
+import { RedisKeys, Status, StatusTrack } from 'src/common/enums/enum';
+import { ICarService } from '../car/interfaces/car.service';
+import { ICompanyService } from '../company/interfaces/c.service';
 
 @Injectable()
 export class TransactionService implements ITransactionService {
   constructor(
+    @Inject("ICarService") private readonly carService: ICarService,
+    @Inject("ICompanyService") private readonly companyService: ICompanyService,
     @Inject("IUserService") private readonly userservice: UserService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly repository: TransactionRespository
     ) {
     
   }
-  async create(createTransactionDto: CreateTransactionDto, currentUser: UserEntity): Promise<ResData<TransactionEntity>> {
-    console.log(createTransactionDto);
+  async createDebit(createTransactionDto: CreateTransactionDto, currentUser: UserEntity): Promise<ResData<TransactionEntity>> {
     const {data: foundUser} = await this.userservice.findOneById(createTransactionDto.userId);
+    const { data: foundCar } = await this.carService.findOneById(createTransactionDto.carId);
+    const { data: foundCompany } = await this.companyService.findOneById(createTransactionDto.companyId);
     const newTransaction = new TransactionEntity()
+    newTransaction.status = Status.DEBIT;
+    newTransaction.user = foundUser;
+    newTransaction.company = foundCompany;
+    newTransaction.car = foundCar;
+    newTransaction.price = createTransactionDto.price;
+    newTransaction.startKm = createTransactionDto.startKm;
+    newTransaction.carData = foundCar;
+    newTransaction.userData = foundUser;
+    newTransaction.endKm = createTransactionDto.endKm;
     newTransaction.createdBy = currentUser;
-    const created = Object.assign(newTransaction, createTransactionDto);
-    const createdTransaction = await this.repository.create(created)
+    const createdTransaction = await this.repository.create(newTransaction);
     await this.cacheManager.del(RedisKeys.TRANSACTIONS)
     return new ResData<TransactionEntity>("transaction created", 201, createdTransaction);
   }

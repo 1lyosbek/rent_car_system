@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsNumber } from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { StatusTrack } from "src/common/enums/enum";
 
 export class CreateTransactionDto {
     @ApiProperty({
@@ -7,19 +8,47 @@ export class CreateTransactionDto {
     })
     @IsNotEmpty()
     @IsInt()
-    count : number;
+    companyId : number;
         
     @ApiProperty({
         type: Number
     })
     @IsNotEmpty()
     @IsInt()
-    productId : number;
+    userId : number;
     
     @ApiProperty({
         type: Number
     })
     @IsNotEmpty()
     @IsInt()
-    userId : number;
+    carId : number;
+
+    @ApiProperty({
+        type: Number
+    })
+    @IsNotEmpty()
+    @IsInt()
+    price : number;
+
+    @ApiProperty({
+        type: Number
+    })
+    @IsNotEmpty()
+    @IsInt()
+    startKm : number;
+
+    @ApiProperty({
+        type: Number
+    })
+    @IsNotEmpty()
+    @IsInt()
+    endKm : number;
+    
+    @ApiProperty({
+        type: String
+    })
+    @IsNotEmpty()
+    @IsEnum(StatusTrack)
+    statusTrack : string;
 }
